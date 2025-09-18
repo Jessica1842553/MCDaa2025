@@ -4,4 +4,4 @@
 
 Repositorio para la matería Aprendizaje Automático.
 
-[Tarea 1](T1.ipynb)
+- [Tarea 1](T1.ipynb)
