@@ -70,4 +70,6 @@ Las variables están agrupadas en las siguientes categorías:
 | `G3`    | Nota final (tercer periodo) (0–20)           | Numérica |
 
 
----
+---  
+
+#### Fuente: _Los datos utilizados fueron obtenidos del repositorio de UCI (Cortez & Silva, 2008). [https://archive.ics.uci.edu/dataset/320/student+performance](https://archive.ics.uci.edu/dataset/320/student+performance)_
