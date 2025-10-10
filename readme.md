@@ -8,7 +8,7 @@ Repositorio para la matería Aprendizaje Automático.
 - [Tarea 2](T2.ipynb)
 - [Tarea 3](T3.ipynb)
 - [Tarea 4](T4.ipynb)
-- [Tarea 5](T5.ipynb)
+- [Tarea 5](T5/T5.ipynb)
 ---
 
 - [Info - Student Perfomance Data Set](DescrBD.md)
