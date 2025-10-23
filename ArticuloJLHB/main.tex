@@ -1,0 +1,728 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\graphicspath{ {img/} }
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{float}  % Para usar [H]
+\usepackage{array}  % Para mejor control en tablas
+\usepackage{caption}
+\usepackage[square,numbers]{natbib}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[round]{natbib}
+\usepackage{amsmath}
+
+
+\usepackage[spanish]{babel}
+
+\title{Artículo sobre predicción del rendimiento académico. \\ [0.5em]\large (Un estudio con la base UCI Student Performance)}
+\author{Jessica Lizeth Hernández Bracho}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+
+El rendimiento académico de los estudiantes es un tema de interés constante en el ámbito educativo, ya que permite identificar los factores que influyen en el desempeño y, a partir de ello, diseñar estrategias que favorezcan la mejora del aprendizaje. En este contexto, el presente estudio se basa en el conjunto de datos Student Performance disponible en el repositorio UCI Machine Learning Repository, el cual recopila información académica, demográfica y social de estudiantes de secundaria de Portugal.
+
+%El conjunto de datos "Student Performance" proviene del repositorio de aprendizaje automático de la Universidad de California en Irvine (UCI Machine Learning Repository). Este dataset fue recopilado con el propósito de analizar los factores que pueden influir en el rendimiento académico de los estudiantes de secundaria en Portugal.
+
+Especialmente se trabajará con información detallada sobre estudiantes de la asignatura Matemáticas, contiene datos de aproximadamente 395 estudiantes, con un total de 33 variables, las cuales abarcan aspectos personales, familiares, escolares y académicos.
+
+
+Este estudio combina enfoques estadísticos y de aprendizaje automático para ofrecer una visión integral sobre los factores que afectan el rendimiento académico, contribuyendo al entendimiento de cómo ciertas variables pueden influir significativamente en los resultados educativos.
+
+
+\section{Descripción de los datos}
+
+"Student Performance Data Set" del UCI Machine Learning Repository, recopilado por \citeauthor{student_performance_320} \citeyear{student_performance_320}.
+Contiene información sobre los estudiantes de secundaria en Portugal, sus datos personales, familiares, escolares y sus notas en diferentes periodos.
+
+
+Para este trabajo, se seleccionaron únicamente las variables más directamente asociadas al rendimiento académico con el fin de realizar análisis exploratorios, pruebas de hipótesis, selección de características y modelos predictivos.
+
+\subsection*{Datos}
+
+Las variables están agrupadas en las siguientes categorías:
+
+\subsubsection*{Datos Personales del Estudiante:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|l|}
+\hline
+\textbf{Columna} & \textbf{Descripción}                                & \textbf{Tipo} \\ \hline
+sex              & Género del estudiante (F = femenino, M = masculino) & Categórica    \\ \hline
+age              & Edad del estudiante (de 15 a 22 años)               & Numérica      \\ \hline
+address          & Tipo de residencia (U = urbana, R = rural)          & Categórica    \\ \hline
+\end{tabular}
+\caption{Datos personales del estudiante}
+\label{tab:datos_personales}
+\end{table}
+
+\subsubsection*{Contexto Familiar}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|l|}
+\hline
+\textbf{Columna} & \textbf{Descripción}                                & \textbf{Tipo} \\ \hline
+Medu             & Nivel educativo de la madre (0: ninguno, 4: universitario) & Ordinal       \\ \hline
+Fedu             & Nivel educativo del padre (0: ninguno, 4: universitario)  & Ordinal       \\ \hline
+Mjob             & Trabajo de la madre (teacher, health, etc.)          & Categórica    \\ \hline
+\end{tabular}
+\caption{Contexto familiar}
+\label{tab:contexto_familiar}
+\end{table}
+
+\subsubsection*{Información Escolar}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|l|}
+\hline
+\textbf{Columna} & \textbf{Descripción}                                                   & \textbf{Tipo} \\ \hline
+school           & Escuela a la que asiste el estudiante (GP o MS)                        & Categórica    \\ \hline
+studytime        & Tiempo de estudio semanal (1: $<$2h, 4: $>$10h)                       & Numérica ordinal \\ \hline
+failures         & Número de materias reprobadas (0–3)                                   & Numérica     \\ \hline
+schoolsup        & Apoyo educativo adicional en la escuela (yes o no)                    & Categórica    \\ \hline
+famsup           & Apoyo educativo familiar (yes o no)                                   & Categórica    \\ \hline
+internet         & Acceso a internet en casa (yes o no)                                  & Categórica    \\ \hline
+\end{tabular}
+\caption{Información escolar}
+\label{tab:informacion_escolar}
+\end{table}
+
+\subsubsection*{Factores de Comportamiento y Hábitos}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|l|}
+\hline
+\textbf{Columna} & \textbf{Descripción}                                                 & \textbf{Tipo} \\ \hline
+activities       & Participa en actividades extracurriculares (yes o no)                & Categórica    \\ \hline
+goout            & Frecuencia con la que sale con amigos (1–5)                         & Numérica ordinal \\ \hline
+Dalc             & Consumo de alcohol entre semana (1–5)                               & Numérica ordinal \\ \hline
+Walc             & Consumo de alcohol en fin de semana (1–5)                           & Numérica ordinal \\ \hline
+health           & Estado de salud autoevaluado (1–5)                                  & Numérica ordinal \\ \hline
+\end{tabular}
+\caption{Factores de comportamiento y hábitos}
+\label{tab:factores_comportamiento}
+\end{table}
+
+\subsubsection*{Rendimiento Académico}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|l|}
+\hline
+\textbf{Columna} & \textbf{Descripción}                                  & \textbf{Tipo} \\ \hline
+G1               & Nota obtenida en el primer periodo (0–20)             & Numérica      \\ \hline
+G2               & Nota obtenida en el segundo periodo (0–20)            & Numérica      \\ \hline
+G3               & Nota final (tercer periodo) (0–20)                    & Numérica      \\ \hline
+\end{tabular}
+\caption{Rendimiento académico}
+\label{tab:rendimiento_academico}
+\end{table}
+
+
+\section{Antecedentes}
+
+Los alumnos que obtienen un buen rendimiento académico son aquellos que alcanzan calificaciones óptimas para aprobar sus asignaturas, siendo una medida para valorar sus capacidades, que expresa lo aprendido durante su preparación. En este ámbito, existen varios factores relacionados con el rendimiento académico de los estudiantes y la calidad de la educación superior, entre los cuales se destacan: la infraestructura educativa, el sistema de evaluación docente, el entorno social, familiar y económico del
+estudiante, los tipos de exámenes, la malla curricular, entre otros que inciden en su propio rendimiento y la calidad de la educación.
+
+
+Existen diversas investigaciones que abordan el análisis de este tipo de datos. Una publicación particularmente relevante es la de Mishra et al.~\citep{mishraEA2024}, en donde se propone un enfoque similar al que se plantea en este trabajo, pues se evalúan distintas combinaciones y análisis al conjunto de datos con enfoque cuantitativo.
+ 
+
+\section{Metodología}
+
+El análisis se desarrollará a través de los siguientes pasos:
+\begin{enumerate}
+    \item \underline{{Evaluación del tipo de variables:}} 
+    
+    
+    Inicialmente se seleccionó las siguientes variables de interés para el análisis, por la importancia dentro del tema:
+    \begin{itemize}[label=\--] % Guion doble como viñeta
+    \item \textit{Age:} Edad del estudiante
+    \item \textit{Studytime:} Tiempo dedicado al estudio
+    \item \textit{Failures:} Número de materias reprobadas anteriormente
+    \item \textit{Absences:} Número de faltas
+    \item \textit{G1, G2, G3:} Calificaciones de los tres periodos (G3 representa la calificación final)
+    \end{itemize}
+    
+    Se utilizó un gráfico Q-Q (Quantile-Quantile) para visualizar la distribución de cada variable y determinar si son o no paramétricas.
+
+    \item \underline{Estadística descriptiva:} Se calcularon medidas descriptivas (media, mediana, desviación estándar, mínimos y máximos) para cada variable, con el objetivo de observar el comportamiento general de los datos.
+
+    \item \underline{Matriz de correlación:} Se construyó una matriz de correlación entre las variables, lo que permitirá identificar relaciones lineales entre ellas. 
+    
+    Se interpretarán acerca de las correlaciones más significativas, especialmente aquellas que puedan incidir en el rendimiento académico (G3).
+
+    \item \underline{Pruebas de hipótesis:} A partir de las correlaciones observadas, se proponen hipótesis estadísticas, con el fin de determinar si ciertas variables tienen un impacto significativo sobre la nota final del estudiante.
+
+
+    Se realizó una prueba no paramétrica de Mann-Whitney U para comparar las calificaciones finales (G3) entre dos grupos de estudiantes:
+    \begin{itemize}[label=\--] % Guion doble como viñeta
+    \item Grupo con número de faltas bajas (menos que la media de faltas).
+    \item Grupo con número de faltas altas (mayor o igual que la media de faltas).
+    \end{itemize}
+
+    Se elaboró un diagrama de caja comparando las calificaciones finales entre los dos grupos definidos anteriormente {\textit{(Fig.~\ref{fig:boxplot}, pag.~\pageref{fig:boxplot})}}.
+    
+    \item \underline{Selección de características:} Se realiza una etapa de selección de variables para identificar las características más relevantes que permiten predecir la calificación final G3. Esta fase fue crucial para reducir la dimensionalidad del problema, mejorar la precisión del modelo y evitar el sobreajuste.
+    
+    
+    Se utilizaron los siguientes métodos:
+    \begin{enumerate}[label=\roman*.]
+    \item {\textit{Transformación de variables categóricas}} 
+    
+    
+    Se convirtieron variables con valores tipo 'yes'/'no' a formato binario (1/0) para ser utilizadas por los modelos. Por ejemplo: higher, internet, schoolsup, entre otras.
+    \item {\textit{Análisis de varianza (ANOVA - Valor F)}} 
+    
+    
+    Se aplicó la prueba F de regresión (\textit{f\_regression}) para evaluar la relevancia estadística lineal de cada variable con respecto a \textit{G3}. Las variables con valores-p inferiores a un umbral de significancia ($\alpha$ = 0.05) fueron consideradas relevantes.
+    \item {\textit{Umbral de varianza}} 
+    
+    
+    Se utilizó el método VarianceThreshold para descartar variables con muy baja dispersión, ya que estas no aportan suficiente información al modelo.
+    \item {\textit{Información mutua}} 
+    
+    
+    Se aplicó la métrica de mutual information (\textit{mutual\_info\_regression}) para capturar relaciones no lineales entre las variables predictoras y la variable objetivo.
+    \item {\textit{Selección exhaustiva de características (EFS)}} 
+    
+    
+    Se utilizó el método Exhaustive Feature Selector junto con regresión lineal como estimador, este método prueba todas las combinaciones posibles de variables dentro de un rango definido y selecciona el subconjunto que maximiza el rendimiento (en este caso, minimiza el MAE).
+    \end{enumerate}
+    
+    \item \underline{Agrupamiento de datos:} 
+    
+    Por lo aplicado en la sección anterior, se restablecen las variables a trabajar y las variables fueron estandarizadas utilizando StandardScaler, con el fin de evitar sesgos por diferencias en escalas numéricas, para utilizar el algoritmo no supervisado DBSCAN.
+
+
+    \textbf{DBSCAN}\textit{(Density-Based Spatial Clustering of Applications with Noise)}, el cual agrupa observaciones en función de la densidad de los datos, sin necesidad de definir previamente el número de grupos (clusters). Este método permite además identificar outliers o puntos atípicos.
+
+    Además, para evaluar la calidad de los agrupamientos, se utilizó la métrica \textbf{Silhouette Score}, que mide la relación interna de los clusters frente a su separación entre sí.
+
+    Se utilizó un diagrama de caja para visualizar la distribución de la calificación final (G3) entre los distintos grupos formados por DBSCAN, lo que permitió observar visualmente las diferencias en rendimiento académico por cluster {\textit{(Fig.~\ref{fig:boxplot_dbscan}, pag.~\pageref{fig:boxplot_dbscan})}}.
+
+    \item \underline{Pronóstico:} El conjunto de datos fue dividido en: 80\% para entrenamiento y 20\% para prueba, esto se realizó utilizando la función (\textit{train\_test\_split()}) de Scikit-Learn.
+    
+    
+    Para la selección y aplicación de modelos supervisados, se aplicaron dos algoritmos de aprendizaje supervisado de tipo regresión:
+    \begin{enumerate}[label=\alph*)]
+    \item \textbf{Regresión Lineal Múltiple}, donde se ajustó una función lineal de la forma:
+    $y=\beta _{0}+\beta _{1}x_{1}+\beta _{2}x_{2}+...+\beta _{n}x_{n}+\epsilon$
+    
+    
+    Este modelo permite observar el peso de cada variable en la predicción del rendimiento final.
+
+    \item \textbf{Random Forest Regressor}, se aplicó como modelo complementario, capaz de capturar relaciones no lineales.
+    
+    
+    Un método supervisado que construye múltiples árboles de decisión y promedia sus resultados para mejorar la precisión. 
+\end{enumerate}
+
+
+Ambos modelos fueron evaluados mediante las siguientes métricas:
+
+\begin{itemize}[label=\textendash]
+\item \textbf{MAE} \textit{(Mean Absolute Error)}: Error promedio entre los valores reales y predichos.
+
+\item \textbf{RMSE} \textit{(Root Mean Squared Error)}: Representa la desviación estándar de los residuales (errores de predicción).
+\end{itemize}
+
+Por último, se realizaron visualizaciones con gráficos de dispersión y de barras para analizar la calidad de las predicciones y comparar el rendimiento de los modelos.
+
+\end{enumerate}
+
+
+\section{Resultados}
+
+\subsection*{Tipo de Variables}
+Se sustituyeron las variables de interés en una prueba rápida de normalidad \textit{gráfico Q-QPlot.} 
+
+% Primera fila de imágenes
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{graficos/qq.age.pdf}
+        \caption{\centering \small Gráfico QQ para la variable edad}
+        \label{fig:gra1}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{graficos/qq.studytime.pdf}
+        \caption{\centering \small Gráfico QQ para la variable Tiempo de Estudio}
+        \label{fig:gra2}
+    \end{minipage}
+\end{figure}
+
+% Segunda fila de imágenes
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{graficos/qq.failures.pdf}
+        \caption{\centering \small Gráfico QQ para la variable Materias Reprobadas}
+        \label{fig:gra3}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{graficos/qq.absences.pdf}
+        \caption{\centering \small Gráfico QQ para la variable Faltas}
+        \label{fig:gra4}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    % Imagen 1
+    \begin{minipage}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graficos/qq.G1.pdf}
+        \caption*{(a)}
+    \end{minipage}
+    \hspace{0.03\textwidth}
+    % Imagen 2
+    \begin{minipage}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graficos/qq.G2.pdf}
+        \caption*{(b)}
+    \end{minipage}
+    \hspace{0.03\textwidth}
+    % Imagen 3
+    \begin{minipage}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{graficos/qq.G3.pdf}
+        \caption*{(c)}
+    \end{minipage}
+
+    \caption{Gráficas QQ variables: G1, G2 y G3 (calificaciones períodos)}
+    \label{fig:tres-graficos}
+\end{figure}
+
+
+Al ver los resultados de cada variable se concluye que son \textbf{datos no paramétricos}.
+
+\subsection*{Estadísticos Descriptivos}
+
+\begin{table}[H]
+\begin{tabular}{cccccccc}
+      & \cellcolor[HTML]{DAE8FC}\textbf{age} & \cellcolor[HTML]{DAE8FC}\textbf{studytime} & \cellcolor[HTML]{DAE8FC}\textbf{failures} & \cellcolor[HTML]{DAE8FC}\textbf{absences} & \cellcolor[HTML]{DAE8FC}\textbf{G1} & \cellcolor[HTML]{DAE8FC}\textbf{G2} & \cellcolor[HTML]{DAE8FC}\textbf{G3} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+count & \textit{395}                         & \textit{395}                               & \textit{395}                              & \textit{395}                              & \textit{395}                        & \textit{395}                        & \textit{395}                        \\
+\rowcolor[HTML]{EFEFEF} 
+mean  & 16.696203                            & 2.035443                                   & 0.334177                                  & 5.708861                                  & 10.908861                           & 10.713924                           & 10.415190                           \\
+\rowcolor[HTML]{FFFFFF} 
+std   & 1.276043                             & 0.839240                                   & 0.743651                                  & 8.003096                                  & 3.319195                            & 3.761505                            & 4.581443                            \\
+\rowcolor[HTML]{EFEFEF} 
+min   & 15                                   & 1                                          & 0                                         & 0                                         & 3                                   & 0                                   & 0                                   \\
+\rowcolor[HTML]{FFFFFF} 
+25\%  & 16                                   & 1                                          & 0                                         & 0                                         & 8                                   & 9                                   & 8                                   \\
+\rowcolor[HTML]{EFEFEF} 
+50\%  & 17                                   & 2                                          & 0                                         & 4                                         & 11                                  & 11                                  & 11                                  \\
+\rowcolor[HTML]{FFFFFF} 
+75\%  & 18                                   & 2                                          & 0                                         & 8                                         & 13                                  & 13                                  & 14                                  \\
+\rowcolor[HTML]{EFEFEF} 
+max   & 22                                   & 4                                          & 3                                         & 75                                        & 19                                  & 19                                  & 20                                 
+\end{tabular}
+\caption{Estadísticos Descriptivos}
+\label{tab:estadisticos_descriptivos}
+\end{table}
+
+\subsection*{Correlación}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{graficos/matriz.corr.pdf}
+    \caption{\small Matriz de Correlación}
+    \label{fig:correlacion}
+\end{figure}
+
+Observaciones: 
+\begin{itemize}[label=\textendash]
+    \item La mayoría de las variables tienen una correlación positiva moderada.
+    \item Las variables \textit{G1, G2 y G3} (calificaciones de los periodos), tienen una correlación positiva y fuerte entre ellas.
+    \item La variable \textit{failures} (número de materias reprodas anteriormente), es la que se muestra con una mayor correlación negativa en comparación con las demás.
+\end{itemize}
+
+\subsection*{Prueba de Hipótesis}
+
+\subsubsection*{Efecto del número de faltas en la calificación final}
+
+Con el objetivo de evaluar si el número de faltas escolares \textit{(absences)} tiene un efecto significativo sobre la calificación final del estudiante \textit{(G3)}, se realizó una prueba no paramétrica de Mann–Whitney U. Esta prueba se aplicó debido a que las distribuciones no cumplían con los supuestos de normalidad.
+
+\begin{center}
+\begin{tabular}{rl}
+$H_0$:& No hay diferencia significativa en $G3$ entre los grupos. \\
+$H_1$:& Hay diferencia significativa en $G3$ entre los grupos.
+\end{tabular}
+\end{center}
+
+La muestra se dividió en dos grupos, tomando como punto de corte la media de faltas en el conjunto de datos:
+\begin{itemize}
+    \item Grupo de faltas bajas: Estudiantes con un número de faltas inferior a la media.
+    \item Grupo de faltas altas: Estudiantes con un número de faltas igual o superior a la media.
+\end{itemize}
+
+Se compararon las calificaciones finales \textit{(G3)} de ambos grupos. Los resultados fueron los siguientes:
+\begin{itemize}[label=\textendash]
+    \item Media de G3 en el grupo de faltas bajas: 10.17
+    \item Media de G3 en el grupo de faltas altas: 10.84
+    \item Estadístico U = 18,595
+    \item Valor-p = 0.7019
+\end{itemize}
+
+Dado que el valor-p (0.7) es mayor a 0.05, \textbf{no se rechaza la hipótesis nula}, lo que indica que no existe una diferencia estadísticamente significativa en las calificaciones finales entre los estudiantes con menos faltas y aquellos con más faltas. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{graficos/boxplot.Abs-G3.pdf}
+    \caption{\small Diagrama de Caja - Comparación de Faltas y Nota Final (G3)}
+    \label{fig:boxplot}
+\end{figure}
+
+En la gráfica se comparan las calificaciones finales (G3) entre los dos grupos de estudiantes con número de faltas bajas y altas.
+
+Ambos grupos presentan una media muy similar, el número de faltas no parece afectar de forma clara la nota final, lo que concuerda con los resultados de la prueba estadística realizada, donde no se encontró una relación significativa entre las ausencias y el rendimiento final.
+
+
+\subsection*{Selección de Características}
+
+A través de distintos métodos de selección de características, se identificaron las variables más relevantes para predecir la calificación final (G3) de los estudiantes.
+\begin{itemize}[label=\textendash]
+
+\item {\textit{\textbf{ANOVA (valor F):}}}
+Las variables con mayor relevancia estadística lineal para predecir G3 fueron:
+    \begin{itemize}[label=\--] % Guion doble como viñeta
+    \item \textbf{G2} (calificación del segundo periodo)
+    \item \textbf{G1} (calificación del primer periodo)
+    \item \textbf{Failures} (número de materias reprobadas)
+    \end{itemize}
+    
+\item {\textbf{\textit{Varianza:}}} 
+Las variables \textit{G1} y \textit{failures (número de materias reprobadas)} presentaron una varianza considerable, lo cual respalda su utilidad al aportar información a los modelos. En cambio, variables como higher mostraron baja varianza, aunque se mantuvieron por su valor interpretativo.
+
+\item {\textbf{\textit{Información mutua:}}}
+Este análisis mostró que variables como studytime, absences y higher, aunque no tan fuertes en valor F, tienen una dependencia no lineal significativa con G3.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rccclll}
+\textbf{}                                  & \multicolumn{1}{r}{\cellcolor[HTML]{DAE8FC}\textbf{valor\_f}} & \multicolumn{1}{r}{\cellcolor[HTML]{DAE8FC}\textbf{varianza}} & \multicolumn{1}{r}{\cellcolor[HTML]{DAE8FC}\textbf{mir}} &  &  &  \\ \cline{1-4}
+\textbf{G2}                                & 1775.7075                                                     & 0.0331                                                        & 0.0382                                                   &  &  &  \\
+\cellcolor[HTML]{EFEFEF}\textbf{G1}        & \cellcolor[HTML]{EFEFEF}705.8422                              & \cellcolor[HTML]{EFEFEF}0.0780                                & \cellcolor[HTML]{EFEFEF}0.0196                           &  &  &  \\
+\textbf{failures}                          & 58.6716                                                       & 0.0612                                                        & 0.0482                                                   &  &  &  \\
+\cellcolor[HTML]{EFEFEF}\textbf{higher}    & \cellcolor[HTML]{EFEFEF}13.5349                               & \cellcolor[HTML]{EFEFEF}0.0113                                & \cellcolor[HTML]{EFEFEF}0.1289                           &  &  &  \\
+\textbf{age}                               & 10.5354                                                       & 0.0480                                                        & 0                                                        &  &  &  \\
+\cellcolor[HTML]{EFEFEF}\textbf{studytime} & \cellcolor[HTML]{EFEFEF}3.7968                                & \cellcolor[HTML]{EFEFEF}0.0429                                & \cellcolor[HTML]{EFEFEF}0.8105                           &  &  &  \\
+\textbf{absences}                          & 0.4614                                                        & 0.0390                                                        & 1.3948                                                   &  &  &  \\
+\multicolumn{1}{l}{}                       & \multicolumn{1}{l}{}                                          & \multicolumn{1}{l}{}                                          & \multicolumn{1}{l}{}                                     &  &  & 
+\end{tabular}
+\caption{Resultados: ANOVA-Varianza-MIR}
+\label{tab:VALOR F-VAR}
+\end{table}
+
+
+\item {\textbf{\textit{Selección exhaustiva (EFS):}}}
+El método EFS identificó que la mejor combinación de variables para minimizar el error fue:
+    \begin{itemize}[label=\--]
+    \item \textbf{Failures} (número de materias reprobadas)
+    \item \textbf{G2} (calificación del segundo periodo)
+    \end{itemize}
+
+Esto coincide con los hallazgos previos, reforzando su importancia como predictores clave del rendimiento final.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.61\textwidth]{graficos/graph.efs.pdf}
+    \caption{\small Selección exhaustiva (EFS)}
+    \label{fig:efs}
+\end{figure}
+
+\item {\textbf{Conclusión de la selección de variables}}
+
+
+Variables predictoras:
+    \begin{itemize}[label=\--]
+    \item Studytime (tiempo de estudio).
+    \item Absences (faltas).
+    \item Failures (materías reprobadas).
+    \item G1 (calificación primer periodo).
+    \item G2 (calificación segundo periodo).
+    \end{itemize}
+Variable de respuesta:
+    \begin{itemize}[label=\--]
+    \item G3 (nota final del curso).
+    \end{itemize}
+  
+\end{itemize}
+
+\subsection*{Agrupamiento de datos}
+
+Gracias a las pruebas anteriores se restablecen las variables a trabajar, por lo que en este apartado se aplicará un algoritmo no supervisado para conocer mejor su densidad. Las variables fueron estandarizadas utilizando StandardScaler, con el fin de evitar sesgos por diferencias en escalas numéricas.
+
+\subsubsection*{Algoritmo no supervisado: \textbf{DBSCAN}} 
+
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise), este es un método de clustering basado en densidad porque encuentra un número de grupos (clusters) comenzando por una estimación de la distribución de densidad de los nodos correspondientes.
+
+\begin{itemize}
+\item \textit{Modelo matemático de DBSCAN}
+\end{itemize}
+
+DBSCAN agrupa puntos en regiones de alta densidad y clasifica como valores atípicos (outliers) aquellos que se encuentran en zonas de baja densidad.  
+Los parámetros principales son:
+\begin{itemize}[label=\--]
+\item \textit{eps($\epsilon$):} radio de vecindad, es decir, la distancia máxima para que dos puntos se consideren vecinos.
+\item \textit{min pts:} número mínimo de puntos requeridos para que una región se considere densa, sirve para formar un cluster (grupo).
+\end{itemize}
+
+El algoritmo comienza seleccionando un punto no visitado y determina si tiene al menos puntos (min pts) dentro de la distancia eps ($\epsilon$). Si es así, se forma un cluster y se expanden los puntos vecinos densos, de lo contrario, el punto se clasifica como ruido (outlier).  
+
+
+Así, DBSCAN identifica automáticamente grupos de forma arbitraria y detecta valores atípicos.
+
+
+\begin{itemize}
+    \item \textit{¿Por qué DBSCAN conviene para estos datos?}
+\end{itemize}
+
+En el conjunto de datos Student Performance, las características como tiempo de estudio, ausencias, calificaciones y número de materias reprobadas tienden a tener una alta diversidad agregando las variables de ausencias extremas o bajo rendimiento muy marcado.
+
+
+DBSCAN es útil en este contexto porque: 
+
+
+-No requiere conocer a priori el número de clusters (grupos), lo cual es práctico dado que no se sabe cuántos perfiles de estudiantes podrían existir.  
+
+
+-Detecta automáticamente outliers o casos atípicos, ayudando a identificar estudiantes con comportamientos extremos (por ejemplo, altos niveles de ausencias).
+
+\begin{itemize}
+    \item \textit{\textbf{{Silhouette Score}}}
+\end{itemize}
+
+Se utilizó la métrica Silhouette Score como estrategia para identificar la cantidad óptima de grupos en los datos, es adecuada para algoritmos como DBSCAN, ya que se refiere a un método de interpretación y validación de la coherencia dentro del análisis de grupos.   
+
+Esta métrica evalúa qué tan bien está asignado cada punto dentro de su grupo donde el valor oscila entre -1 a 1, donde un valor alto indica que el objeto está bien emparejado con su propio cúmulo y mal emparejado con los cúmulos vecinos.
+
+\begin{itemize}
+    \item \textit{\textbf{Aplicación - Resultados}}
+\end{itemize}
+Tras evaluar múltiples configuraciones del parámetro eps ($\epsilon$), se identificó que la configuración óptima fue:
+
+\begin{itemize}[label=\--]
+    \item eps ($\epsilon$)= 2.0
+    \item min\_samples (min pts)= 5
+    \item Número de clusters encontrados: 2
+    \item Número de outliers detectados: 6
+    \item Silhouette Score: Se obtuvo un valor aceptable (0.521), lo que sugiere una separación clara entre los grupos formados.
+\end{itemize}
+
+
+\textbf{Descripción de los Clusters} 
+
+
+El algoritmo identificó tres grupos:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Cluster 0}
+
+    \begin{itemize}
+        \item Número de estudiantes: 372
+        \item Perfil: Estudiantes con buen rendimiento académico (promedio $G3 \approx 10.6$), pocas ausencias, pocas materias reprobadas y alta motivación para continuar estudios superiores. Representan el grupo más estable y exitoso.
+    \end{itemize}
+    
+    \item \textbf{Cluster 1}
+
+    \begin{itemize}
+        \item Número de estudiantes: 17
+        \item Perfil: Estudiantes con bajo rendimiento académico (promedio $G3 \approx 6.7$), mayor número de materias reprobadas y escaso interés en educación superior. Este grupo podría representar estudiantes en riesgo académico.
+    \end{itemize}
+    
+    \item \textbf{Cluster -1 (outliers)}
+
+    \begin{itemize}
+        \item Número de estudiantes: 6
+        \item Perfil: Estudiantes con un número significativamente alto de faltas ($\approx 34$), comportamiento atípico frente al resto. Pueden estar influenciados por factores externos que afectan su rendimiento.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{graficos/boxplot_dbscan.pdf}
+    \caption{\small DBSCAN}
+    \label{fig:boxplot_dbscan}
+\end{figure}
+
+
+\subsection*{Pronóstico}
+
+\subsubsection*{Algoritmo supervisado: \textbf{Regresión Lineal}}
+
+
+Para este proyecto se seleccionó un modelo de \textbf{regresión lineal múltiple}, una técnica supervisada que busca modelar la relación entre una variable dependiente (en este caso, la calificación final \textit{G3}) y un conjunto de variables independientes \textit{(tiempo de estudio, fallos previos, inasistencias, si desea cursar estudios superiores, y las calificaciones previas (G1 y G2))}.
+
+
+Este modelo asume que existe una relación lineal entre las variables predictoras y la variable de respuesta, y tiene la siguiente forma general:
+
+\begin{center}
+    $y=\beta _{0}+\beta _{1}x_{1}+\beta _{2}x_{2}+...+\beta _{n}x_{n}+\epsilon$
+\end{center}
+
+Donde:
+\begin{itemize}[label=\--]
+\item \textit{Variable dependiente} ($y$): Es la variable que se quiere predecir.
+\item \textit{Variables independientes $x_{1},x_{2},...,x_{n}$:} Son las variables que se utilizan para predecir la variable dependiente.
+\item \textit{Coeficientes de regresión $\beta _{0},\beta _{1},...,\beta _{n}$:}
+  
+    \begin{itemize}[label=\star]
+        \item $\beta _{0}$ (intercepto): Es el valor predicho de '$y$' cuando todas las variables independientes son cero.
+        \item $\beta _{i} (i>0)$: Miden el cambio en la variable dependiente '$y$' por cada cambio de una unidad en la variable independiente correspondiente, manteniendo las demás variables constantes.
+    \end{itemize}
+
+\item \textit{Término de error $\epsilon$:} Representa la variabilidad en '$y$' y captura las diferencias entre los valores predichos y los reales.
+\end{itemize}
+
+\begin{itemize}
+    \item \textit{Justificación del Modelo}
+\end{itemize}
+
+La regresión lineal fue elegida como modelo base por varias razones:
+
+\begin{itemize}[label=\--]
+\item \textit{Relación entre variables:} Algunas variables, como G1 y G2, tienen una relación evidente con G3, lo cual favorece un modelo lineal.
+\item \textit{Simplicidad e interpretabilidad:} Es fácil de implementar y analizar. Permite entender cómo cada variable influye en el resultado.
+\item \textit{Línea base útil:} Sirve como punto de partida para comparar otros modelos más complejos. Si la regresión lineal da buenos resultados, puede ser suficiente en ciertos contextos.
+\end{itemize}
+
+
+\begin{itemize}
+    \item \textit{\textbf{Métricas de Evaluación}}
+\end{itemize}
+
+Para medir el desempeño del modelo se utilizaron dos métricas comúnes en problemas de regresión:
+
+\begin{itemize}[label=\--]
+    \item \textit{MAE} (Mean Absolute Error):  
+  Es el promedio de los errores absolutos entre las predicciones y los valores reales.  
+  Indica cuánto se desvía en promedio la predicción del valor real.  
+
+
+    \underline{Formula }= $(1/n) ∑ |yᵢ - ŷᵢ|$
+  
+  
+  \textit{*Cuanto menor es el MAE, mejor es el modelo.}
+  
+  \item \textit{RMSE} (Root Mean Squared Error):
+  Es la raíz cuadrada del promedio del error cuadrático.  
+  Representa la desviación estándar de los residuales (errores de predicción).  
+  
+  
+    \underline{Formula} = $\sqrt{((1/n) ∑ (yᵢ - ŷᵢ)²)}$
+  
+  
+  \textit{*Un valor bajo de RMSE indica un buen ajuste.} 
+\end{itemize}
+
+
+\begin{itemize}
+    \item \textit{\textbf{Aplicación - Resultados}}
+\end{itemize}
+
+El conjunto de datos se dividió en un 80\% para entrenamiento y un 20\% para prueba, utilizando la función train\_test\_split() de Scikit-Learn.
+
+\begin{enumerate}
+    \item \textbf{Modelo de Regresión Lineal Múltiple}
+
+La regresión lineal asume una relación lineal entre las variables predictoras y la variable de respuesta.
+    
+    
+El modelo ajustado obtuvo la siguiente ecuación:
+\begin{align*}
+y =\;& -1.872 - 0.0814\,(\text{studytime}) - 0.4309\,(\text{failures}) \\
+    & + 0.0397\,(\text{absences}) + 0.3027\,(\text{higher}) \\
+    & + 0.143\,(\text{G1}) + 0.9791\,(\text{G2})
+\end{align*}
+
+Los resultados indican que las calificaciones previas (G1 y G2) son los predictores con mayor peso positivo sobre la nota final, mientras que el número de materias reprobadas (failures) tiene un efecto negativo.
+
+En cuanto al desempeño, las métricas de evaluación fueron:
+\begin{itemize}[label=\--]
+    \item \underline{MAE} (Mean Absolute Error): 1.33
+    \item \underline{RMSE} (Root Mean Squared Error): 2.11
+\end{itemize}
+
+Estos valores reflejan un error promedio de aproximadamente 1.3 puntos en la predicción de la calificación final. Aunque el modelo logra capturar la tendencia general, se observa cierta dispersión entre los valores reales y los predichos, especialmente en los extremos.
+
+La primera gráfica de la {\textit{(Fig.~\ref{fig:rlineal_vs_rforest}, pag.~\pageref{fig:rlineal_vs_rforest})}} muestra la relación entre los valores reales y los predichos para el modelo lineal, donde la dispersión alrededor de la línea roja (predicción perfecta) evidencia la presencia de errores de estimación en varios puntos.
+
+\item \textbf{Modelo Random Forest Regressor}
+
+Posteriormente, se aplicó el modelo Random Forest Regressor, un método supervisado que construye múltiples árboles de decisión y promedia sus resultados para mejorar la precisión. 
+
+
+En comparación con la regresión lineal, el modelo de Random Forest presenta menores errores, lo que indica una mejor capacidad predictiva. La dispersión de los valores reales y predichos se aproxima más a la línea ideal, reflejando una mayor precisión en la estimación de la calificación final.
+
+
+\begin{itemize}[label=\--]
+    \item \underline{Regresión Lineal} MAE \approx 1.33 - RMSE \approx 2.11
+    \item \underline{Random Forest}: MAE \approx 1.06 - RMSE \approx 1.64
+\end{itemize}
+\end{enumerate}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{graficos/rlineal_vs_rforest.pdf}
+    \caption{Regresion Lineal - Bosque Aleatorio}
+    \label{fig:rlineal_vs_rforest}
+\end{figure}
+
+La Regresión Lineal resulta útil como modelo base por su simplicidad e interpretabilidad, aunque su precisión es limitada ante comportamientos no lineales del conjunto de datos.
+Por el contrario, el modelo de Random Forest demuestra un rendimiento superior en las métricas, gracias a su capacidad para modelar relaciones no lineales y manejar interacciones entre variables.
+
+
+Ambos modelos permiten predecir la calificación final de los estudiantes con un error promedio menor a dos puntos, lo cual se considera un nivel de precisión aceptable para este tipo de datos educativos
+
+
+\section{Conclusiones y discusión}
+
+Se exponen las conclusiones de la investigación
+
+Para este análisis, se han seleccionado como variables de interés las siguientes:
+\begin{itemize}
+    \item \textbf{Edad/Age:} Edad del estudiante.
+    \item \textbf{Tiempo de Estudio/Studytime:} Tiempo de estudio semanal.
+    \item \textbf{Materías Reprobadas/Failures:} Número de asignaturas reprobadas previamente.
+    \item \textbf{Faltas/Absences:} Número total de ausencias escolares.
+    \item \textbf{G1, G2, G3:} Calificaciones del estudiante en el primer, segundo y tercer período (nota final), respectivamente.
+\end{itemize}
+
+
+PH: En consecuencia, según este análisis, el número de faltas escolares no parece tener un efecto determinante en el rendimiento final medido por G3.
+
+
+El uso del algoritmo DBSCAN permitió segmentar a los estudiantes en grupos bien diferenciados según su perfil académico y comportamiento escolar. Estos resultados pueden ser útiles para:
+
+Identificar estudiantes en riesgo (Cluster 1) y ofrecerles apoyo focalizado.
+
+Analizar outliers (Cluster -1), cuyas características excepcionales podrían requerir intervención específica o estudio adicional.
+
+Confirmar patrones de éxito académico (Cluster 0), lo cual puede servir de referencia para prácticas educativas efectivas.
+
+La combinación de técnicas de clustering y análisis de rendimiento ofrece una herramienta poderosa para la toma de decisiones en contextos educativos, especialmente en términos de intervención temprana y personalización del aprendizaje.
+
+%\bibliographystyle{plain}
+%\bibliography{referencias}
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}
+
