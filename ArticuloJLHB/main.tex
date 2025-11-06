@@ -1,5 +1,5 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[12pt]{article}
+\usepackage{graphicx}
 \graphicspath{ {img/} }
 \usepackage{float}
 \usepackage{enumitem}
@@ -13,10 +13,16 @@
 \usepackage[round]{natbib}
 \usepackage{amsmath}
 
+\usepackage{ebgaramond}  
+\usepackage{helvet}     
+\renewcommand{\familydefault}{\rmdefault}
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\bfseries} 
+
 
 \usepackage[spanish]{babel}
 
-\title{Artículo sobre predicción del rendimiento académico. \\ [0.5em]\large (Un estudio con la base UCI Student Performance)}
+\title{\sffamily\bfseries Artículo sobre predicción del rendimiento académico. \\ [0.5em]\large (Un estudio con la base UCI Student Performance)}
 \author{Jessica Lizeth Hernández Bracho}
 \date{\today}
 
@@ -42,13 +48,13 @@ Este estudio combina enfoques estadísticos y de aprendizaje automático para of
 Contiene información sobre los estudiantes de secundaria en Portugal, sus datos personales, familiares, escolares y sus notas en diferentes periodos.
 
 
-Para este trabajo, se seleccionaron únicamente las variables más directamente asociadas al rendimiento académico con el fin de realizar análisis exploratorios, pruebas de hipótesis, selección de características y modelos predictivos.
+Para este trabajo, se seleccionaron únicamente las variables directamente asociadas al rendimiento académico con el fin de realizar análisis exploratorios, pruebas de hipótesis, selección de características y modelos predictivos.
 
 \subsection*{Datos}
 
-Las variables están agrupadas en las siguientes categorías:
+Las variables están agrupadas en las siguientes categorías
 
-\subsubsection*{Datos Personales del Estudiante:}
+\subsubsection*{Datos Personales del Estudiante}
 
 \begin{table}[H]
 \centering
@@ -173,7 +179,7 @@ El análisis se desarrollará a través de los siguientes pasos:
 
     Se elaboró un diagrama de caja comparando las calificaciones finales entre los dos grupos definidos anteriormente {\textit{(Fig.~\ref{fig:boxplot}, pag.~\pageref{fig:boxplot})}}.
     
-    \item \underline{Selección de características:} Se realiza una etapa de selección de variables para identificar las características más relevantes que permiten predecir la calificación final G3. Esta fase fue crucial para reducir la dimensionalidad del problema, mejorar la precisión del modelo y evitar el sobreajuste.
+    \item \underline{Selección de características:} Se realiza una etapa de selección de variables para identificar las características más relevantes que permiten predecir la calificación final G3. Esta fase fue crucial para reducir la dimensionalidad del problema, mejorar la precisión del modelo.
     
     
     Se utilizaron los siguientes métodos:
@@ -211,7 +217,7 @@ El análisis se desarrollará a través de los siguientes pasos:
 
     Se utilizó un diagrama de caja para visualizar la distribución de la calificación final (G3) entre los distintos grupos formados por DBSCAN, lo que permitió observar visualmente las diferencias en rendimiento académico por cluster {\textit{(Fig.~\ref{fig:boxplot_dbscan}, pag.~\pageref{fig:boxplot_dbscan})}}.
 
-    \item \underline{Pronóstico:} El conjunto de datos fue dividido en: 80\% para entrenamiento y 20\% para prueba, esto se realizó utilizando la función (\textit{train\_test\_split()}) de Scikit-Learn.
+    \item \underline{Pronóstico:} El conjunto de datos fue dividido en: 80\% para entrenamiento y 20\% para prueba, esto se realizó utilizando la función \textit{train\_test\_split()} de Scikit-Learn.
     
     
     Para la selección y aplicación de modelos supervisados, se aplicaron dos algoritmos de aprendizaje supervisado de tipo regresión:
@@ -239,6 +245,10 @@ Ambos modelos fueron evaluados mediante las siguientes métricas:
 
 Por último, se realizaron visualizaciones con gráficos de dispersión y de barras para analizar la calidad de las predicciones y comparar el rendimiento de los modelos.
 
+    \item \underline{Diseño de Experimentos:} Se evaluaron tres tamaños de partición para el conjunto de prueba: 20\%, 30\% y 40\%, con el fin de analizar su impacto en el desempeño de las variables.
+    
+    
+    Además, se utilizaron los dos modelos supervisados utilizados anteriormente \textit{(Regresión Lineal Múltiple y Random Forest Regressor)} agregando a esto las métricas junto con $R^2$ (Coeficiente de determinación)
 \end{enumerate}
 
 
@@ -408,7 +418,7 @@ Las variables con mayor relevancia estadística lineal para predecir G3 fueron:
 Las variables \textit{G1} y \textit{failures (número de materias reprobadas)} presentaron una varianza considerable, lo cual respalda su utilidad al aportar información a los modelos. En cambio, variables como higher mostraron baja varianza, aunque se mantuvieron por su valor interpretativo.
 
 \item {\textbf{\textit{Información mutua:}}}
-Este análisis mostró que variables como studytime, absences y higher, aunque no tan fuertes en valor F, tienen una dependencia no lineal significativa con G3.
+Este análisis mostró que variables como studytime, absences y higher resaltan, aunque no tan fuertes con el valor F, tienen una dependencia no lineal significativa con G3.
 
 \begin{table}[H]
 \centering
@@ -468,7 +478,8 @@ Gracias a las pruebas anteriores se restablecen las variables a trabajar, por lo
 
 \subsubsection*{Algoritmo no supervisado: \textbf{DBSCAN}} 
 
-DBSCAN (Density-Based Spatial Clustering of Applications with Noise), este es un método de clustering basado en densidad porque encuentra un número de grupos (clusters) comenzando por una estimación de la distribución de densidad de los nodos correspondientes.
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise), este es un método de clustering basado en densidad porque encuentra un número de grupos (clusters) comenzando por una estimación de la distribución de densidad de los nodos correspondientes.~\citep{datascientest_dbscan_2023}
+
 
 \begin{itemize}
 \item \textit{Modelo matemático de DBSCAN}
@@ -565,10 +576,10 @@ El algoritmo identificó tres grupos:
 \subsubsection*{Algoritmo supervisado: \textbf{Regresión Lineal}}
 
 
-Para este proyecto se seleccionó un modelo de \textbf{regresión lineal múltiple}, una técnica supervisada que busca modelar la relación entre una variable dependiente (en este caso, la calificación final \textit{G3}) y un conjunto de variables independientes \textit{(tiempo de estudio, fallos previos, inasistencias, si desea cursar estudios superiores, y las calificaciones previas (G1 y G2))}.
+Para este proyecto se seleccionó un modelo de \textbf{regresión lineal múltiple}, una técnica supervisada que busca modelar la relación entre una variable dependiente (en este caso, la calificación final \textit{G3}) y un conjunto de variables independientes \textit{(tiempo de estudio, fallos previos, inasistencias, y las calificaciones previas (G1 y G2))}.
 
 
-Este modelo asume que existe una relación lineal entre las variables predictoras y la variable de respuesta, y tiene la siguiente forma general:
+Este modelo asume que existe una relación lineal entre las variables predictoras y la variable de respuesta, y tiene la siguiente forma general ~\citep{geeksforgeeks_linear_regression_2025}:
 
 \begin{center}
     $y=\beta _{0}+\beta _{1}x_{1}+\beta _{2}x_{2}+...+\beta _{n}x_{n}+\epsilon$
@@ -580,7 +591,7 @@ Donde:
 \item \textit{Variables independientes $x_{1},x_{2},...,x_{n}$:} Son las variables que se utilizan para predecir la variable dependiente.
 \item \textit{Coeficientes de regresión $\beta _{0},\beta _{1},...,\beta _{n}$:}
   
-    \begin{itemize}[label=\star]
+    \begin{itemize}
         \item $\beta _{0}$ (intercepto): Es el valor predicho de '$y$' cuando todas las variables independientes son cero.
         \item $\beta _{i} (i>0)$: Miden el cambio en la variable dependiente '$y$' por cada cambio de una unidad en la variable independiente correspondiente, manteniendo las demás variables constantes.
     \end{itemize}
@@ -605,7 +616,7 @@ La regresión lineal fue elegida como modelo base por varias razones:
     \item \textit{\textbf{Métricas de Evaluación}}
 \end{itemize}
 
-Para medir el desempeño del modelo se utilizaron dos métricas comúnes en problemas de regresión:
+Para medir el desempeño del modelo se utilizaron dos métricas comúnes en problemas de regresión ~\citep{chugh_mae_mse_rmse_adjusted_r2_2020}:
 
 \begin{itemize}[label=\--]
     \item \textit{MAE} (Mean Absolute Error):  
@@ -613,7 +624,7 @@ Para medir el desempeño del modelo se utilizaron dos métricas comúnes en prob
   Indica cuánto se desvía en promedio la predicción del valor real.  
 
 
-    \underline{Formula }= $(1/n) ∑ |yᵢ - ŷᵢ|$
+    \underline{Formula}= $(1/n) \Sigma |yᵢ - ŷᵢ|$
   
   
   \textit{*Cuanto menor es el MAE, mejor es el modelo.}
@@ -689,6 +700,69 @@ Por el contrario, el modelo de Random Forest demuestra un rendimiento superior e
 
 
 Ambos modelos permiten predecir la calificación final de los estudiantes con un error promedio menor a dos puntos, lo cual se considera un nivel de precisión aceptable para este tipo de datos educativos
+
+\subsection*{Diseño de Experimentos}
+
+Se realizó un diseño factorial considerando tres factores: modelo, normalización y tamaño del conjunto de prueba, evaluando su impacto sobre MAE, RMSE y R².
+
+\begin{table}[H]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{c|c|c}
+\rowcolor[HTML]{DAE8FC} 
+\textbf{Factor}               & \textbf{Descripción}                   & \textbf{Niveles}                 \\ \hline
+Modelo                        & Tipo de algoritmo utilizado            & Regresión Lineal / Random Forest \\
+Normalización                 & Escalado de las variables numéricas    & Sí / No                          \\
+Tamaño del conjunto de prueba & Proporción de datos usados para prueba & 0.2 / 0.3 / 0.4                 
+\end{tabular}%
+}
+\caption{Diseño de experimento}
+\label{tab:DiseñoExp}
+\end{table}
+
+La normalización se aplicó únicamente a las variables numéricas continuas (studytime, failures, absences, G1, G2), excluyendo higher por ser binaria.
+
+
+
+Los resultados fueron los siguientes: 
+\begin{table}[H]
+\begin{tabular}{lllllll}
+   & \cellcolor[HTML]{DAE8FC}\textbf{Modelo} & \cellcolor[HTML]{DAE8FC}\textbf{Normalización} & \cellcolor[HTML]{DAE8FC}\textbf{Test Size} & \cellcolor[HTML]{DAE8FC}\textbf{MAE} & \cellcolor[HTML]{DAE8FC}\textbf{RMSE} & \cellcolor[HTML]{DAE8FC}\textbf{R2} \\ \hline
+0  & Lineal                                  & No                                             & 0.2                                        & 1.329063                             & 2.110212                              & 0.782834                            \\
+\rowcolor[HTML]{EFEFEF} 
+1  & RandomForest                            & No                                             & 0.2                                        & 1.057683                             & 1.644297                              & 0.868144                            \\
+2  & Lineal                                  & Sí                                             & 0.2                                        & 1.329063                             & 2.110212                              & 0.782834                            \\
+\rowcolor[HTML]{EFEFEF} 
+3  & RandomForest                            & Sí                                             & 0.2                                        & 1.091158                             & 1.678482                              & 0.862604                            \\
+4  & Lineal                                  & No                                             & 0.3                                        & 1.275442                             & 2.079363                              & 0.803305                            \\
+\rowcolor[HTML]{EFEFEF} 
+5  & RandomForest                            & No                                             & 0.3                                        & 0.992344                             & 1.615209                              & 0.881317                            \\
+6  & Lineal                                  & Sí                                             & 0.3                                        & 1.275442                             & 2.079363                              & 0.803305                            \\
+\rowcolor[HTML]{EFEFEF} 
+7  & RandomForest                            & Sí                                             & 0.3                                        & 1.013826                             & 1.638008                              & 0.877943                            \\
+8  & Lineal                                  & No                                             & 0.4                                        & 1.254136                             & 2.011668                              & 0.815684                            \\
+\rowcolor[HTML]{EFEFEF} 
+9  & RandomForest                            & No                                             & 0.4                                        & 1.003287                             & 1.599378                              & 0.883493                            \\
+10 & Lineal                                  & Sí                                             & 0.4                                        & 1.254136                             & 2.011668                              & 0.815684                            \\
+\rowcolor[HTML]{EFEFEF} 
+11 & RandomForest                            & Sí                                             & 0.4                                        & 1.026723                             & 1.614910                              & 0.881219                           
+\end{tabular}
+\caption{Resultados - Diseño de Experimento}
+\label{tab:RESDiseñoExp}
+\end{table}
+
+Observaciones: 
+\begin{itemize}
+    \item El modelo Random Forest fue superior a la Regresión Lineal en todas las combinaciones de factores.
+    \item Incrementar el tamaño del conjunto de prueba de 20\% a 40\% permitió que el modelo Random Forest mostrara su mejor desempeño ($R^2$ = 0.883).
+    \item La normalización de variables numéricas no generó mejoras significativas en Random Forest, aunque es más relevante para Regresión Lineal.
+\end{itemize}
+
+Comparando los resultados obtenidos para cada combinación de factores y recordando qué, cuanto menores sean MAE y RMSE, y mayor sea R², mejor será el modelo. 
+
+
+\textbf{El modelo con mejor desempeño global fue el Random Forest sin normalización y con un tamaño de prueba del 40\%}, alcanzando un $R^2$ = 0.883, lo que indica que explica aproximadamente el 88\% de la variabilidad en las calificaciones finales.
+
+
 
 
 \section{Conclusiones y discusión}
