@@ -14,4 +14,4 @@ Repositorio para la matería Aprendizaje Automático.
 ---
 
 - [Info - Student Perfomance Data Set](DescrBD.md)
-- [Artículo](ArticuloJLHB/Art.AA_JLHB.pdf)
+- [PIA - Artículo](ArticuloJLHB/Art.AA_JLHB.pdf)
