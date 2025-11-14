@@ -44,7 +44,7 @@
 \vspace*{-1cm}
 
 \begin{center}
-    \resizebox{\textwidth}{!}{\TitleStyleOne{Artículo sobre predicción del rendimiento académico}}\\[0.5em]
+    \resizebox{\textwidth}{!}{\TitleStyleOne{Predicción del rendimiento académico}}\\[0.5em]
     
     % Línea fina debajo del título
     \rule{0.65\textwidth}{0.35pt}\\[0.7em]
@@ -210,7 +210,7 @@ El análisis se desarrollará a través de los siguientes pasos:
     \item Grupo con número de faltas altas (mayor o igual que la media de faltas).
     \end{itemize}
 
-    Se elaboró un diagrama de caja comparando las calificaciones finales entre los dos grupos definidos anteriormente {\textit{(Fig.~\ref{fig:boxplot}, pág.~\pageref{fig:boxplot})}}.
+    Se elaboró un diagrama de caja comparando las calificaciones finales entre los dos grupos definidos anteriormente. {\textit{(Fig.~\ref{fig:boxplot}, pág.~\pageref{fig:boxplot})}}
     
     \item \underline{\textbf{Selección de características:}} Se realiza una etapa de selección de variables para identificar las características más relevantes que permiten predecir la calificación final G3. Esta fase fue crucial para reducir la dimensión del problema y así, mejorar la precisión del modelo.
     
@@ -247,7 +247,7 @@ El análisis se desarrollará a través de los siguientes pasos:
 
     Además, para evaluar la calidad de los agrupamientos, se utilizó la métrica \textbf{Silhouette Score}, que mide la relación interna de los grupos (clústers) frente a su separación entre sí.
 
-    Se utilizó un diagrama de caja para visualizar la distribución de la calificación final (G3) entre los distintos grupos formados por DBSCAN, lo que permitió observar las diferencias en rendimiento académico por clúster. {\textit{(Fig.~\ref{fig:boxplot_dbscan}, pág.~\pageref{fig:boxplot_dbscan})}}.
+    Se utilizó un diagrama de caja para visualizar la distribución de la calificación final (G3) entre los distintos grupos formados por DBSCAN, lo que permitió observar las diferencias en rendimiento académico por clúster. {\textit{(Fig.~\ref{fig:boxplot_dbscan}, pág.~\pageref{fig:boxplot_dbscan})}}
 
     \item \underline{\textbf{Pronóstico:}} El conjunto de datos fue dividido en 80\% para entrenamiento y 20\% para prueba, esto se realizó utilizando la función \texttt{train\_test\_split()} de Scikit-Learn.
     
@@ -519,7 +519,7 @@ Dado los resultados previos se restablecen las variables a trabajar, por lo que 
 
 \subsubsection*{Algoritmo no supervisado: \textbf{DBSCAN}} 
 
-DBSCAN (Density-Based Spatial Clustering of Applications with Noise), este es un método de agrupamiento basado en densidad porque encuentra un número de grupos (clústers) comenzando por una estimación de la distribución de densidad de los nodos correspondientes.~\citep{datascientest_dbscan_2023}
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise), este es un método de agrupamiento basado en densidad porque encuentra un número de grupos (clústers) comenzando por una estimación de la distribución de densidad de los nodos correspondientes~\citep{datascientest_dbscan_2023}.
 
 
 \begin{itemize}
@@ -557,7 +557,7 @@ En el conjunto de datos Student Performance, las características como tiempo de
 
 Se utilizó la métrica Silhouette Score como estrategia para identificar la cantidad óptima de grupos en los datos, es adecuada para algoritmos como DBSCAN, ya que se refiere a un método de interpretación y validación de la coherencia dentro del análisis de grupos.   
 
-Esta métrica evalúa qué tan bien está asignado cada punto dentro de su grupo donde el valor oscila entre -1 a 1, donde un valor alto (cerca del 1) indica que el objeto está bien emparejado con su propio cúmulo. \citep{WikipediaSilhouetteClustering}
+Esta métrica evalúa qué tan bien está asignado cada punto dentro de su grupo donde el valor oscila entre -1 a 1, donde un valor alto (cerca del 1) indica que el objeto está bien emparejado con su propio cúmulo \citep{WikipediaSilhouetteClustering}.
 
 \begin{itemize}
     \item \textit{\textbf{Aplicación - Resultados}}
@@ -617,7 +617,7 @@ El algoritmo identificó tres grupos:
 Para este proyecto se seleccionó un modelo de \textbf{regresión lineal múltiple}, una técnica supervisada que busca modelar la relación entre una variable dependiente (en este caso, la calificación final \textit{G3}) y un conjunto de variables independientes \textit{(tiempo de estudio, fallos previos, seguimiento de estudios, inasistencias, y las calificaciones previas (G1 y G2))}.
 
 
-Este modelo asume que existe una relación lineal entre las variables predictoras y la variable de respuesta, y tiene la siguiente forma general ~\citep{geeksforgeeks_linear_regression_2025}:
+Este modelo asume que existe una relación lineal entre las variables predictoras y la variable de respuesta, y tiene la siguiente forma general~\citep{geeksforgeeks_linear_regression_2025}:
 
 \begin{center}
     $y=\beta _{0}+\beta _{1}x_{1}+\beta _{2}x_{2}+...+\beta _{n}x_{n}+\epsilon$
@@ -654,7 +654,7 @@ La regresión lineal múltiple fue elegida como modelo base por varias razones:
     \item \textit{\textbf{Métricas de Evaluación}}
     
     
-    Para medir el desempeño del modelo se utilizaron dos métricas comunes en problemas de regresión ~\citep{chugh_mae_mse_rmse_adjusted_r2_2020}:
+    Para medir el desempeño del modelo se utilizaron dos métricas comunes en problemas de regresión~\citep{chugh_mae_mse_rmse_adjusted_r2_2020}:
 \end{itemize}
 
 \begin{itemize}[label=\textbf{\--}]
@@ -761,7 +761,7 @@ La normalización se aplicó únicamente a las variables numéricas continúas (
 
 
 
-Los resultados fueron los siguientes: 
+Los resultados fueron los siguientes, presentados de mejor a peor por la métrica R²: 
 \begin{table}[H]
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lllllll}
@@ -771,25 +771,25 @@ Los resultados fueron los siguientes:
   \cellcolor[HTML]{DAE8FC}\textbf{Test Size} &
   \cellcolor[HTML]{DAE8FC}\textbf{MAE} &
   \cellcolor[HTML]{DAE8FC}\textbf{RMSE} &
-  \cellcolor[HTML]{DAE8FC}\textbf{R²} \\ \hline
-0  & Lineal       & No & 0.2 & 1.3290 & 2.1102 & 0.7828 \\
-\rowcolor[HTML]{EFEFEF} 
-1  & RandomForest & No & 0.2 & 1.0576 & 1.6442 & 0.8681 \\
-2  & Lineal       & Sí & 0.2 & 1.3290 & 2.1102 & 0.7828 \\
-\rowcolor[HTML]{EFEFEF} 
-3  & RandomForest & Sí & 0.2 & 1.0911 & 1.6784 & 0.8626 \\
-4  & Lineal       & No & 0.3 & 1.2754 & 2.0793 & 0.8033 \\
+  \cellcolor[HTML]{DAE8FC}\textbf{R2} \\ \hline
+9  & RandomForest & No & 0.4 & 1.0032 & 1.5993 & 0.8834 \\
 \rowcolor[HTML]{EFEFEF} 
 5  & RandomForest & No & 0.3 & 0.9923 & 1.6152 & 0.8813 \\
-6  & Lineal       & Sí & 0.3 & 1.2754 & 2.0793 & 0.8033 \\
+11 & RandomForest & Sí & 0.4 & 1.0267 & 1.6149 & 0.8812 \\
 \rowcolor[HTML]{EFEFEF} 
 7  & RandomForest & Sí & 0.3 & 1.0138 & 1.6380 & 0.8779 \\
-8  & Lineal       & No & 0.4 & 1.2541 & 2.0116 & 0.8156 \\
+1  & RandomForest & No & 0.2 & 1.0576 & 1.6442 & 0.8681 \\
 \rowcolor[HTML]{EFEFEF} 
-9  & RandomForest & No & 0.4 & 1.0032 & 1.5993 & 0.8834 \\
-10 & Lineal       & Sí & 0.4 & 1.2541 & 2.0116 & 0.8156 \\
+3  & RandomForest & Sí & 0.2 & 1.0911 & 1.6784 & 0.8626 \\
+8  & Lineal       & No & 0.4 & 1.2541 & 2.0117 & 0.8157 \\
 \rowcolor[HTML]{EFEFEF} 
-11 & RandomForest & Sí & 0.4 & 1.0267 & 1.6149 & 0.8812
+10 & Lineal       & Sí & 0.4 & 1.2541 & 2.0117 & 0.8157 \\
+6  & Lineal       & Sí & 0.3 & 1.2754 & 2.0794 & 0.8033 \\
+\rowcolor[HTML]{EFEFEF} 
+4  & Lineal       & No & 0.3 & 1.2754 & 2.0794 & 0.8033 \\
+2  & Lineal       & Sí & 0.2 & 1.3291 & 2.1102 & 0.7828 \\
+\rowcolor[HTML]{EFEFEF} 
+0  & Lineal       & No & 0.2 & 1.3291 & 2.1102 & 0.7828
 \end{tabular}%
 }
 \caption{Resultados - Diseño de Experimento}
